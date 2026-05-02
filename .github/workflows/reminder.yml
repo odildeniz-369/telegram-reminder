@@ -2,7 +2,10 @@ name: Telegram Reminder
 
 on:
   schedule:
-    - cron: '15 16 2 5 *'
+    # Dernier jour du mois à 12h Kuwait (9h UTC)
+    - cron: '0 9 28-31 * *'
+    # 1er jour du mois à 12h Kuwait (9h UTC)
+    - cron: '0 9 1 * *'
   workflow_dispatch:
 
 jobs:
