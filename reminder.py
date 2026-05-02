@@ -1,6 +1,6 @@
 import asyncio
-from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from telegram import Bot
+from datetime import datetime
 
 TOKEN = "8746997616:AAGeC_OvOmdseeYz9YQDavPz-l5O3ve_Tg4"
 
@@ -40,16 +40,6 @@ MESSAGE_FIN_MOIS = """
 شكراً لتعاونكم 🙏
 """
 
-MESSAGE_DEBUT_MOIS = """
-📋 موعد التقرير
-
-تذكير بضرورة إدخال التقرير الشهري على النظام SFSS 📊
-
-اليوم هو اخر يوم لادخال التقرير ⏰
-
-شكراً لتعاونكم 🙏
-"""
-
 async def send_reminder(message):
     bot = Bot(token=TOKEN)
     for chat_id in GROUPS:
@@ -59,32 +49,22 @@ async def send_reminder(message):
         except Exception as e:
             print(f"Erreur pour le groupe {chat_id} : {e}")
 
+
 async def main():
-    scheduler = AsyncIOScheduler()
+    bot = Bot(token=TOKEN)
+    day = datetime.utcnow().day
+    
+    if day == 1:
+        message = MESSAGE_DEBUT_MOIS
+    else:
+        message = MESSAGE_FIN_MOIS
 
-    # Dernier jour du mois à 12h Kuwait (9h UTC)
-    scheduler.add_job(
-        send_reminder,
-        trigger="cron",
-        day="last",
-        hour=9,
-        minute=0,
-        args=[MESSAGE_FIN_MOIS]
-    )
-
-    # 1er jour du mois à 12h Kuwait (9h UTC)
-    scheduler.add_job(
-        send_reminder,
-        trigger="cron",
-        day=1,
-        hour=9,
-        minute=0,
-        args=[MESSAGE_DEBUT_MOIS]
-    )
-
-    scheduler.start()
-    print("Bot demarre !")
-    await asyncio.Event().wait()
+    for chat_id in GROUPS:
+        try:
+            await bot.send_message(chat_id=chat_id, text=message)
+            print(f"Reminder envoye au groupe {chat_id}")
+        except Exception as e:
+            print(f"Erreur pour le groupe {chat_id} : {e}")
 
 if __name__ == "__main__":
     asyncio.run(main())
