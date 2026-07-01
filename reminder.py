@@ -1,11 +1,10 @@
 import asyncio
 from telegram import Bot
-from datetime import datetime
 
-TOKEN = "8746997616:AAGeC_OvOmdseeYz9YQDavPz-l5O3ve_Tg4"
+TOKEN = "8746997616:AAGar8Tr-xWVC7I-VLu3o9Zc7HEdLFcorCs"
 
 GROUPS = [
-   -4156278698,
+    -4156278698,
     -1002225773041,
     -4043849089,
     -4060990536,
@@ -30,8 +29,8 @@ GROUPS = [
     -1003742618269,
 ]
 
-MESSAGE_FIN_MOIS = """
- 📋 موعد التقرير
+MESSAGE = """
+📋 موعد التقرير
 
 تذكير بضرورة إدخال التقرير الشهري على النظام SFSS 📊
 
@@ -39,31 +38,14 @@ MESSAGE_FIN_MOIS = """
 
 من قام بإدخال التقرير مسبقاً، يُرجى تجاهل هذه الرسالة 🙏
 
-شكراً لتعاونكم 🙏 
+شكراً لتعاونكم 🙏
 """
-
-async def send_reminder(message):
-    bot = Bot(token=TOKEN)
-    for chat_id in GROUPS:
-        try:
-            await bot.send_message(chat_id=chat_id, text=message)
-            print(f"Reminder envoye au groupe {chat_id}")
-        except Exception as e:
-            print(f"Erreur pour le groupe {chat_id} : {e}")
-
 
 async def main():
     bot = Bot(token=TOKEN)
-    day = datetime.utcnow().day
-    
-    if day == 1:
-        message = MESSAGE_DEBUT_MOIS
-    else:
-        message = MESSAGE_FIN_MOIS
-
     for chat_id in GROUPS:
         try:
-            await bot.send_message(chat_id=chat_id, text=message)
+            await bot.send_message(chat_id=chat_id, text=MESSAGE)
             print(f"Reminder envoye au groupe {chat_id}")
         except Exception as e:
             print(f"Erreur pour le groupe {chat_id} : {e}")
